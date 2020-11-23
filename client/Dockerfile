@@ -1,8 +1,8 @@
 FROM node:14.14.0-alpine
 WORKDIR '/app'
-COPY ./package.json ./
+COPY package.json .
 RUN yarn install
-COPY ./ ./
+COPY . .
 CMD ["yarn", "build"]
 
 FROM nginx
