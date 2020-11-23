@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t shrimpy0723/react-test -f ./client/Dockerfile.dev .
+
+script:
+  - docker run -e shrimpy0723/react-test yarn test
+
+after_success:
+  - docker build -t shrimpy0723/multi-client ./client
+  - docker build -t shrimpy0723/multi-nginx ./nginx
+  - docker build -t shrimpy0723/multi-server ./server
+  - docker build -t shrimpy0723/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push shrimpy0723/multi-client
+  - docker push shrimpy0723/multi-nginx
+  - docker push shrimpy0723/multi-server
+  - docker push shrimpy0723/multi-worker
